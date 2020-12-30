@@ -1,0 +1,67 @@
+# Copyright 2020-present Ksyun
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import os ;
+  SDL2DIR = [ os.environ SDL2DIR ] ;
+
+if $(SDL2DIR) {
+  ECHO Using the SDL2DIR environment variable ;
+
+  SDL2_INCLUDE_DIR = $(SDL2DIR)/include ;
+  SDL2_LIB_DIR = $(SDL2DIR)/lib ;
+} else if [ os.name ] = LINUX {
+  SDL2_INCLUDE_DIR = /usr/include ;
+  SDL2_LIB_DIR = /usr/lib ;
+} else if [ os.name ] = MACOSX {
+  if [ os.platform ] = ARM {
+    SDL2_INCLUDE_DIR = /opt/homebrew/include ;
+    SDL2_LIB_DIR = /opt/homebrew/lib ;
+  } else {
+    SDL2_INCLUDE_DIR = /usr/local/Homebrew/include ;
+    SDL2_LIB_DIR = /usr/local/Homebrew/lib ;
+  }
+} else if [ os.name ] = NT {
+  ECHO You should set the SDL2DIR environment variable, otherwise C:\\dev will be used! ;
+
+  SDL2_INCLUDE_DIR = C:/dev/include ;
+  SDL2_LIB_DIR = C:/dev/lib ;
+}
+
+lib sdl2 : : <name>SDL2 <search>$(SDL2_LIB_DIR) ;
+explicit sdl2 ;
+lib sdl2main : : <name>SDL2main <search>$(SDL2_LIB_DIR) ;
+explicit sdl2main ;
+lib shell32 : : <name>shell32 ;
+explicit shell32 ;
+
+project test_sdl2
+  : requirements
+    <cxxstd>latest
+      <toolset>clang:<cxxstd>17
+    <include>$(SDL2_INCLUDE_DIR)
+    <implicit-dependency>/boost//headers
+    <link>static
+      <target-os>linux:<link>shared
+    <optimization>speed
+    <threading>multi
+    <library>sdl2
+    <library>sdl2main
+      <target-os>windows:<library>shell32
+  : default-build release
+  : build-dir ./bin
+  ;
+
+exe test_sdl2
+  : main.cpp
+  ;
