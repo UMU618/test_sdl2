@@ -13,13 +13,13 @@
 # limitations under the License.
 
 import os ;
-  SDL2DIR = [ os.environ SDL2DIR ] ;
+  SDL2_ROOT = [ os.environ SDL2_ROOT ] ;
 
-if $(SDL2DIR) {
-  ECHO Using the SDL2DIR environment variable ;
+if $(SDL2_ROOT) {
+  ECHO Using the SDL2_ROOT environment variable ;
 
-  SDL2_INCLUDE_DIR = $(SDL2DIR)/include ;
-  SDL2_LIB_DIR = $(SDL2DIR)/lib ;
+  SDL2_INCLUDE_DIR = $(SDL2_ROOT)/include ;
+  SDL2_LIB_DIR = $(SDL2_ROOT)/lib ;
 } else if [ os.name ] = LINUX {
   SDL2_INCLUDE_DIR = /usr/include ;
   SDL2_LIB_DIR = /usr/lib ;
@@ -32,7 +32,7 @@ if $(SDL2DIR) {
     SDL2_LIB_DIR = /usr/local/Homebrew/lib ;
   }
 } else if [ os.name ] = NT {
-  ECHO You should set the SDL2DIR environment variable, otherwise C:\\dev will be used! ;
+  ECHO You should set the SDL2_ROOT environment variable, otherwise C:\\dev will be used! ;
 
   SDL2_INCLUDE_DIR = C:/dev/include ;
   SDL2_LIB_DIR = C:/dev/lib ;
