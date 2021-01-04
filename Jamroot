@@ -14,7 +14,6 @@
 
 import os ;
   SDL2_ROOT = [ os.environ SDL2_ROOT ] ;
-import feature ;
 
 if $(SDL2_ROOT) {
   ECHO Using the SDL2_ROOT environment variable ;
